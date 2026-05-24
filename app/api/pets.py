@@ -109,7 +109,7 @@ def create_pet():
             file = request.files["photo"]
             if file.filename:
                 try:
-                    pet.photo_url = upload_file(file, use_gcs=False)
+                    pet.photo_url = upload_file(file)
                 except ValueError as e:
                     raise ValidationError(str(e))
         
@@ -173,7 +173,7 @@ def update_pet(pet_id):
                 if pet.photo_url:
                     delete_file(pet.photo_url)
                 try:
-                    pet.photo_url = upload_file(file, use_gcs=False)
+                    pet.photo_url = upload_file(file)
                 except ValueError as e:
                     raise ValidationError(str(e))
         
@@ -249,7 +249,7 @@ def upload_pet_photo(pet_id):
             delete_file(pet.photo_url)
         
         try:
-            pet.photo_url = upload_file(file, use_gcs=False)
+            pet.photo_url = upload_file(file)
         except ValueError as e:
             raise ValidationError(str(e))
         

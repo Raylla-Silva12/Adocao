@@ -2,10 +2,13 @@
 Utilitários para uploads de arquivos.
 Suporta upload local e Google Cloud Storage.
 """
+import mimetypes
 import os
 import uuid
-from pathlib import Path
+from urllib.parse import unquote, urlparse
+
 from werkzeug.utils import secure_filename
+
 from app.config import Config
 
 # Extensões de arquivo permitidas
@@ -22,6 +25,34 @@ def get_unique_filename(filename):
     ext = filename.rsplit('.', 1)[1].lower()
     unique_name = f"{uuid.uuid4()}.{ext}"
     return unique_name
+
+
+def should_use_gcs():
+    """Usa GCS quando o bucket estiver configurado (produção no Cloud Run)."""
+    return bool(Config.GCS_BUCKET)
+
+
+def _guess_content_type(filename, fallback=None):
+    guessed, _ = mimetypes.guess_type(filename)
+    return guessed or fallback or "application/octet-stream"
+
+
+def _gcs_blob_name_from_url(file_url):
+    """Extrai o caminho do blob (pets/...) a partir da URL pública do GCS."""
+    parsed = urlparse(file_url)
+    path = unquote(parsed.path.lstrip("/"))
+
+    bucket_prefix = f"{Config.GCS_BUCKET}/"
+    if path.startswith(bucket_prefix):
+        return path[len(bucket_prefix):]
+
+    if path.startswith("pets/"):
+        return path
+
+    if "pets/" in file_url:
+        return unquote(file_url.split("pets/", 1)[1].split("?", 1)[0])
+
+    return None
 
 
 def upload_file_local(file):
@@ -68,19 +99,20 @@ def upload_file_gcs(file):
     unique_filename = get_unique_filename(filename)
     blob = bucket.blob(f"pets/{unique_filename}")
     
-    blob.upload_from_string(
-        file.read(),
-        content_type=file.content_type
-    )
-    
+    content_type = _guess_content_type(unique_filename, file.content_type)
+    blob.upload_from_string(file.read(), content_type=content_type)
+
     return blob.public_url
 
 
-def upload_file(file, use_gcs=False):
+def upload_file(file, use_gcs=None):
     """
     Faz upload do arquivo.
-    Se use_gcs=True, usa Google Cloud Storage; caso contrário, usa sistema local.
+    Usa GCS automaticamente quando GCS_BUCKET estiver configurado.
     """
+    if use_gcs is None:
+        use_gcs = should_use_gcs()
+
     if use_gcs and Config.GCS_BUCKET:
         return upload_file_gcs(file)
     return upload_file_local(file)
@@ -109,11 +141,9 @@ def delete_file_gcs(file_url):
         client = storage.Client()
         bucket = client.bucket(Config.GCS_BUCKET)
         
-        # Extrai o nome do blob da URL
-        if "pets/" in file_url:
-            blob_name = file_url.split("pets/")[1]
-            blob = bucket.blob(f"pets/{blob_name}")
-            blob.delete()
+        blob_name = _gcs_blob_name_from_url(file_url)
+        if blob_name:
+            bucket.blob(blob_name).delete()
     except Exception as e:
         print(f"Erro ao deletar arquivo GCS: {e}")
 
