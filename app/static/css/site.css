@@ -1099,6 +1099,7 @@ img {
   padding: 0.875rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
 }
 
 .admin-table th {
@@ -1110,6 +1111,40 @@ img {
   letter-spacing: 0.04em;
 }
 
+.admin-table .cell-photo {
+  width: 76px;
+}
+
+.admin-table .photo-thumb,
+.admin-table .photo-empty {
+  width: 52px;
+  height: 52px;
+}
+
+.admin-table .photo-thumb {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.admin-table .photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-table .photo-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
 .admin-table tr:last-child td {
   border-bottom: none;
 }
@@ -1118,17 +1153,11 @@ img {
   background: var(--color-bg);
 }
 
-.admin-table img {
-  width: 52px;
-  height: 52px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-}
-
 .table-actions {
-  display: flex;
+  display: inline-flex;
+  align-items: center;
   gap: 0.5rem;
+  flex-wrap: nowrap;
 }
 
 .table-actions button {

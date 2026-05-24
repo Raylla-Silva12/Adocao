@@ -111,20 +111,22 @@ async function loadPets() {
     data.pets.forEach((pet) => {
       const tr = document.createElement("tr");
       const photo = pet.photo_url
-        ? `<img src="${pet.photo_url}" alt="">`
-        : '<span class="text-muted">—</span>';
+        ? `<div class="photo-thumb"><img src="${pet.photo_url}" alt=""></div>`
+        : '<div class="photo-empty" aria-hidden="true">—</div>';
       const contact = pet.owner_contact
         ? escapeHtml(pet.owner_contact)
         : '<span class="text-muted">—</span>';
       tr.innerHTML = `
-          <td>${photo}</td>
+          <td class="cell-photo">${photo}</td>
           <td><strong>${escapeHtml(pet.name)}</strong></td>
           <td>${SPECIES_LABELS[pet.species] || pet.species}</td>
           <td>${contact}</td>
           <td>${STATUS_LABELS[pet.status] || pet.status}</td>
-          <td class="table-actions">
-            <button type="button" data-edit="${pet.id}">Editar</button>
-            <button type="button" class="btn-danger" data-delete="${pet.id}">Excluir</button>
+          <td>
+            <div class="table-actions">
+              <button type="button" data-edit="${pet.id}">Editar</button>
+              <button type="button" class="btn-danger" data-delete="${pet.id}">Excluir</button>
+            </div>
           </td>`;
       body.appendChild(tr);
     });
