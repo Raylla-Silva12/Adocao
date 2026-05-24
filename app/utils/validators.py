@@ -23,6 +23,11 @@ def validate_pet_data(data):
                 errors.append("Idade deve estar entre 0 e 50")
         except (ValueError, TypeError):
             errors.append("Idade deve ser um número")
+
+    if data.get("owner_contact") is not None:
+        contact = str(data.get("owner_contact", "")).strip()
+        if len(contact) > 50:
+            errors.append("Contato do responsável muito longo (máx 50 caracteres)")
     
     if errors:
         raise ValidationError(", ".join(errors))

@@ -2,6 +2,17 @@
 const TOKEN_KEY = "adocao_admin_token";
 const ADMIN_KEY = "adocao_admin_user";
 
+const STATUS_LABELS = {
+  available: "Disponível",
+  pending: "Em processo",
+  adopted: "Adotado",
+};
+
+const SPECIES_LABELS = {
+  gato: "Gato",
+  cao: "Cão",
+};
+
 function getToken() {
   return sessionStorage.getItem(TOKEN_KEY);
 }
@@ -61,12 +72,6 @@ async function handleLogin(event) {
   }
 }
 
-const STATUS_LABELS = {
-  available: "Disponível",
-  pending: "Em processo",
-  adopted: "Adotado",
-};
-
 function initAdminPanel() {
   if (!requireAuth()) return;
 
@@ -96,27 +101,30 @@ async function loadPets() {
     body.innerHTML = "";
 
     if (!data.pets || data.pets.length === 0) {
-      body.innerHTML = '<tr><td colspan="4">Nenhum gato cadastrado.</td></tr>';
+      body.innerHTML = '<tr><td colspan="6">Nenhum pet cadastrado.</td></tr>';
       return;
     }
 
-    data.pets
-      .filter((p) => p.species === "gato")
-      .forEach((pet) => {
-        const tr = document.createElement("tr");
-        const photo = pet.photo_url
-          ? `<img src="${pet.photo_url}" alt="">`
-          : '<span class="text-muted">—</span>';
-        tr.innerHTML = `
+    data.pets.forEach((pet) => {
+      const tr = document.createElement("tr");
+      const photo = pet.photo_url
+        ? `<img src="${pet.photo_url}" alt="">`
+        : '<span class="text-muted">—</span>';
+      const contact = pet.owner_contact
+        ? escapeHtml(pet.owner_contact)
+        : '<span class="text-muted">—</span>';
+      tr.innerHTML = `
           <td>${photo}</td>
           <td><strong>${escapeHtml(pet.name)}</strong></td>
+          <td>${SPECIES_LABELS[pet.species] || pet.species}</td>
+          <td>${contact}</td>
           <td>${STATUS_LABELS[pet.status] || pet.status}</td>
           <td class="table-actions">
             <button type="button" data-edit="${pet.id}">Editar</button>
             <button type="button" class="btn-danger" data-delete="${pet.id}">Excluir</button>
           </td>`;
-        body.appendChild(tr);
-      });
+      body.appendChild(tr);
+    });
 
     body.querySelectorAll("[data-edit]").forEach((btn) => {
       btn.addEventListener("click", () => startEdit(btn.dataset.edit, data.pets));
@@ -137,13 +145,15 @@ function startEdit(id, pets) {
   const pet = pets.find((p) => p.id === id);
   if (!pet) return;
 
-  document.getElementById("formTitle").textContent = "Editar gato";
+  document.getElementById("formTitle").textContent = "Editar pet";
   document.getElementById("petId").value = pet.id;
+  document.getElementById("species").value = pet.species || "gato";
   document.getElementById("name").value = pet.name || "";
   document.getElementById("breed").value = pet.breed || "";
   document.getElementById("age_years").value = pet.age_years ?? "";
   document.getElementById("temperament").value = pet.temperament || "";
   document.getElementById("description").value = pet.description || "";
+  document.getElementById("owner_contact").value = pet.owner_contact || "";
   document.getElementById("status").value = pet.status || "available";
   document.getElementById("is_vaccinated").checked = !!pet.is_vaccinated;
   document.getElementById("is_neutered").checked = !!pet.is_neutered;
@@ -153,9 +163,10 @@ function startEdit(id, pets) {
 }
 
 function resetForm() {
-  document.getElementById("formTitle").textContent = "Novo gato";
+  document.getElementById("formTitle").textContent = "Novo pet";
   document.getElementById("petForm").reset();
   document.getElementById("petId").value = "";
+  document.getElementById("species").value = "gato";
   document.getElementById("cancelEdit").hidden = true;
   hideMessages();
 }
@@ -167,13 +178,14 @@ function hideMessages() {
 
 function buildFormData() {
   const fd = new FormData();
-  fd.append("species", "gato");
+  fd.append("species", document.getElementById("species").value);
   fd.append("name", document.getElementById("name").value.trim());
   fd.append("breed", document.getElementById("breed").value.trim());
   const age = document.getElementById("age_years").value;
   if (age !== "") fd.append("age_years", age);
   fd.append("temperament", document.getElementById("temperament").value.trim());
   fd.append("description", document.getElementById("description").value.trim());
+  fd.append("owner_contact", document.getElementById("owner_contact").value.trim());
   fd.append("status", document.getElementById("status").value);
   fd.append("is_vaccinated", document.getElementById("is_vaccinated").checked ? "true" : "false");
   fd.append("is_neutered", document.getElementById("is_neutered").checked ? "true" : "false");
@@ -193,10 +205,10 @@ async function savePet(event) {
   try {
     if (petId) {
       await api(`/api/pets/${petId}`, { method: "PUT", body: fd });
-      successEl.textContent = "Gato atualizado com sucesso!";
+      successEl.textContent = "Pet atualizado com sucesso!";
     } else {
       await api("/api/pets", { method: "POST", body: fd });
-      successEl.textContent = "Gato cadastrado com sucesso!";
+      successEl.textContent = "Pet cadastrado com sucesso!";
     }
     successEl.hidden = false;
     resetForm();
@@ -208,7 +220,7 @@ async function savePet(event) {
 }
 
 async function deletePet(id) {
-  if (!confirm("Excluir este gato permanentemente?")) return;
+  if (!confirm("Excluir este pet permanentemente?")) return;
   try {
     await api(`/api/pets/${id}`, { method: "DELETE" });
     loadPets();

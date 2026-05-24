@@ -2,7 +2,7 @@
 Endpoints de pets.
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request, get_jwt_identity
 from app.models import Pet
 from app.extensions import db
 from app.utils.uploads import upload_file, delete_file
@@ -10,6 +10,21 @@ from app.utils.errors import NotFoundError, ValidationError
 from app.utils.validators import validate_pet_data
 
 pets_bp = Blueprint("pets", __name__)
+
+
+def _is_admin_request():
+    """True quando a requisição traz JWT válido de admin."""
+    try:
+        verify_jwt_in_request(optional=True)
+        return get_jwt_identity() is not None
+    except Exception:
+        return False
+
+
+def _serialize_pet(pet, admin=None):
+    if admin is None:
+        admin = _is_admin_request()
+    return pet.to_dict(admin=admin)
 
 
 @pets_bp.route("", methods=["GET"])
@@ -37,7 +52,7 @@ def list_pets():
             "total": total,
             "limit": limit,
             "offset": offset,
-            "pets": [pet.to_dict() for pet in pets]
+            "pets": [_serialize_pet(pet) for pet in pets]
         }), 200
     
     except Exception as e:
@@ -56,7 +71,7 @@ def get_pet(pet_id):
         if not pet:
             raise NotFoundError("Pet não encontrado")
         
-        return jsonify(pet.to_dict()), 200
+        return jsonify(_serialize_pet(pet)), 200
     
     except Exception as e:
         raise Exception(f"Erro ao obter pet: {str(e)}")
@@ -102,6 +117,7 @@ def create_pet():
             temperament=data.get("temperament"),
             is_vaccinated=data.get("is_vaccinated", False),
             is_neutered=data.get("is_neutered", False),
+            owner_contact=data.get("owner_contact") or None,
         )
         
         # Upload de foto
@@ -118,7 +134,7 @@ def create_pet():
         
         return jsonify({
             "message": "Pet criado com sucesso",
-            "pet": pet.to_dict()
+            "pet": _serialize_pet(pet, admin=True)
         }), 201
     
     except ValidationError as e:
@@ -164,6 +180,8 @@ def update_pet(pet_id):
             pet.is_vaccinated = data["is_vaccinated"].lower() == "true"
         if "is_neutered" in data:
             pet.is_neutered = data["is_neutered"].lower() == "true"
+        if "owner_contact" in data:
+            pet.owner_contact = data["owner_contact"].strip() or None
         
         # Upload de nova foto
         if "photo" in request.files:
@@ -181,7 +199,7 @@ def update_pet(pet_id):
         
         return jsonify({
             "message": "Pet atualizado com sucesso",
-            "pet": pet.to_dict()
+            "pet": _serialize_pet(pet, admin=True)
         }), 200
     
     except (NotFoundError, ValidationError) as e:

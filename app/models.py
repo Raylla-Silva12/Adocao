@@ -21,6 +21,7 @@ class Pet(db.Model):
     is_vaccinated = db.Column(db.Boolean, default=False)
     is_neutered = db.Column(db.Boolean, default=False)
     photo_url = db.Column(db.String(500), nullable=True)
+    owner_contact = db.Column(db.String(50), nullable=True)  # só visível no admin
     status = db.Column(
         db.String(50),
         default="available",
@@ -34,9 +35,9 @@ class Pet(db.Model):
     def __repr__(self):
         return f"<Pet {self.name}>"
     
-    def to_dict(self):
-        """Converte o modelo para dicionário."""
-        return {
+    def to_dict(self, admin=False):
+        """Converte o modelo para dicionário. Campos internos só com admin=True."""
+        data = {
             "id": self.id,
             "name": self.name,
             "species": self.species,
@@ -51,6 +52,9 @@ class Pet(db.Model):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
+        if admin:
+            data["owner_contact"] = self.owner_contact
+        return data
 
 
 class Admin(db.Model):

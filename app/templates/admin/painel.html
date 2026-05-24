@@ -6,7 +6,7 @@
   <div class="container">
     <div class="admin-top">
       <div>
-        <h1>Painel de gatos</h1>
+        <h1>Painel de pets</h1>
         <p id="adminEmail" class="admin-user"></p>
       </div>
       <button type="button" id="logoutBtn" class="btn btn-ghost">Sair</button>
@@ -14,10 +14,15 @@
 
     <div class="admin-grid">
       <aside class="admin-form-panel">
-        <h2 id="formTitle">Novo gato</h2>
+        <h2 id="formTitle">Novo pet</h2>
         <form id="petForm" class="admin-form" enctype="multipart/form-data">
           <input type="hidden" id="petId" name="petId">
-          <input type="hidden" name="species" id="species" value="gato">
+
+          <label for="species">Espécie *</label>
+          <select id="species" name="species" required>
+            <option value="gato">Gato</option>
+            <option value="cao">Cão</option>
+          </select>
 
           <label for="name">Nome *</label>
           <input type="text" id="name" name="name" required>
@@ -33,6 +38,10 @@
 
           <label for="description">Descrição</label>
           <textarea id="description" name="description" rows="4"></textarea>
+
+          <label for="owner_contact">Contato do responsável</label>
+          <input type="tel" id="owner_contact" name="owner_contact" placeholder="(11) 99999-9999" autocomplete="tel">
+          <p class="field-hint">Visível apenas no painel admin.</p>
 
           <label for="status">Status</label>
           <select id="status" name="status">
@@ -60,7 +69,7 @@
       </aside>
 
       <div class="admin-list-panel">
-        <h2>Gatos cadastrados</h2>
+        <h2>Pets cadastrados</h2>
         <p id="listLoading" class="text-muted">Carregando...</p>
         <div id="petsTableWrap" class="table-wrap" hidden>
           <table class="admin-table">
@@ -68,6 +77,8 @@
               <tr>
                 <th>Foto</th>
                 <th>Nome</th>
+                <th>Espécie</th>
+                <th>Contato resp.</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>

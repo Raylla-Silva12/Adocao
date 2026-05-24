@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ pet.name }} — Adoção de Gatos{% endblock %}
+{% block title %}{{ pet.name }} — Adoção de Gatos e Cães{% endblock %}
 
 {% block content %}
 <article class="pet-detail">
@@ -7,15 +7,18 @@
     <div class="pet-detail-media">
       {% if pet.photo_url %}
       <img src="{{ pet.photo_url }}" alt="Foto de {{ pet.name }}">
+      {% elif pet.species == 'cao' %}
+      <img src="{{ url_for('static', filename='img/placeholder-dog.svg') }}" alt="">
       {% else %}
       <img src="{{ url_for('static', filename='img/placeholder-cat.svg') }}" alt="">
       {% endif %}
       <span class="badge badge-{{ pet.status }} badge-lg">{{ pet.status | status_label }}</span>
     </div>
     <div class="pet-detail-info">
-      <p class="eyebrow">Perfil para adoção</p>
+      <p class="eyebrow">{{ pet.species | species_label }} · Perfil para adoção</p>
       <h1>{{ pet.name }}</h1>
       <ul class="detail-facts">
+        <li><strong>Espécie:</strong> {{ pet.species | species_label }}</li>
         {% if pet.breed %}<li><strong>Raça:</strong> {{ pet.breed }}</li>{% endif %}
         {% if pet.age_years is not none %}<li><strong>Idade:</strong> {{ pet.age_years }} ano{{ 's' if pet.age_years != 1 else '' }}</li>{% endif %}
         {% if pet.temperament %}<li><strong>Temperamento:</strong> {{ pet.temperament }}</li>{% endif %}
@@ -31,8 +34,11 @@
       {% if pet.status == 'available' %}
       <div class="detail-cta">
         <p>Interessado em adotar? Fale com nossa equipe.</p>
-        <a href="mailto:contato@adocaogatos.local?subject=Interesse em adotar {{ pet.name }}" class="btn btn-primary">Quero adotar</a>
-        <a href="{{ url_for('web.list_pets') }}" class="btn btn-ghost">Ver outros gatos</a>
+        {% set pet_type = 'cão' if pet.species == 'cao' else 'gato' %}
+        {% set adoption_subject = ('Interesse em adotar ' ~ pet.name) | urlencode %}
+        {% set adoption_body = ('Olá! Tenho interesse em adotar o ' ~ pet_type ~ ' ' ~ pet.name ~ '.\n\nVi o perfil em: ' ~ url_for('web.pet_detail', pet_id=pet.id, _external=True) ~ '\n\nAguardo contato.') | urlencode %}
+        <a href="mailto:{{ contact_email }}?subject={{ adoption_subject }}&body={{ adoption_body }}" class="btn btn-primary">Quero adotar</a>
+        <a href="{{ url_for('web.list_pets') }}" class="btn btn-ghost">Ver outros pets</a>
       </div>
       {% else %}
       <p class="notice">{{ pet.name }} não está disponível no momento.</p>
@@ -45,7 +51,7 @@
 {% if related %}
 <section class="section section-muted">
   <div class="container">
-    <h2>Outros gatos disponíveis</h2>
+    <h2>Outros pets disponíveis</h2>
     <div class="pet-grid pet-grid-sm">
       {% for pet in related %}
       {% include "partials/pet_card.html" %}

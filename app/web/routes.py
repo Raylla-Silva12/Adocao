@@ -2,7 +2,7 @@
 Rotas da interface web (HTML).
 A API REST continua em /api/*.
 """
-from flask import Blueprint, render_template, request, abort
+from flask import Blueprint, render_template, request, abort, redirect, url_for
 from app.models import Pet
 
 web_bp = Blueprint("web", __name__)
@@ -17,9 +17,29 @@ def _status_label(status: str) -> str:
     return labels.get(status, status)
 
 
+def _species_label(species: str) -> str:
+    labels = {
+        "gato": "Gato",
+        "cao": "Cão",
+    }
+    return labels.get(species, species)
+
+
 @web_bp.app_template_filter("status_label")
 def status_label_filter(status):
     return _status_label(status)
+
+
+@web_bp.app_template_filter("species_label")
+def species_label_filter(species):
+    return _species_label(species)
+
+
+@web_bp.app_context_processor
+def inject_contact():
+    """Disponibiliza e-mail de contato nos templates."""
+    from flask import current_app
+    return {"contact_email": current_app.config["CONTACT_EMAIL"]}
 
 
 @web_bp.route("/")
@@ -39,38 +59,55 @@ def home():
     )
 
 
-@web_bp.route("/gatos")
+@web_bp.route("/pets")
 def list_pets():
-    """Catálogo de gatos disponíveis para adoção."""
+    """Catálogo de gatos e cães disponíveis para adoção."""
     status = request.args.get("status", "available")
-    query = Pet.query.filter_by(species="gato")
+    species = request.args.get("species", "all")
+
+    query = Pet.query
+    if species and species != "all":
+        query = query.filter_by(species=species)
     if status and status != "all":
         query = query.filter_by(status=status)
+
     pets = query.order_by(Pet.created_at.desc()).all()
     return render_template(
-        "gatos.html",
+        "pets.html",
         pets=pets,
         current_status=status,
+        current_species=species,
     )
 
 
-@web_bp.route("/gatos/<pet_id>")
+@web_bp.route("/pets/<pet_id>")
 def pet_detail(pet_id):
-    """Página de detalhes de um gato."""
+    """Página de detalhes de um pet."""
     pet = Pet.query.get(pet_id)
     if not pet:
         abort(404)
     related = (
         Pet.query.filter(
             Pet.id != pet.id,
-            Pet.species == "gato",
             Pet.status == "available",
         )
         .order_by(Pet.created_at.desc())
         .limit(3)
         .all()
     )
-    return render_template("gato.html", pet=pet, related=related)
+    return render_template("pet.html", pet=pet, related=related)
+
+
+@web_bp.route("/gatos")
+def list_pets_legacy():
+    """Redireciona URL antiga para o catálogo."""
+    return redirect(url_for("web.list_pets", **request.args), code=301)
+
+
+@web_bp.route("/gatos/<pet_id>")
+def pet_detail_legacy(pet_id):
+    """Redireciona URL antiga para o perfil do pet."""
+    return redirect(url_for("web.pet_detail", pet_id=pet_id), code=301)
 
 
 @web_bp.route("/admin")

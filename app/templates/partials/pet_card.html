@@ -3,10 +3,13 @@
     <div class="pet-card-image">
       {% if pet.photo_url %}
       <img src="{{ pet.photo_url }}" alt="Foto de {{ pet.name }}" loading="lazy">
+      {% elif pet.species == 'cao' %}
+      <img src="{{ url_for('static', filename='img/placeholder-dog.svg') }}" alt="" loading="lazy">
       {% else %}
       <img src="{{ url_for('static', filename='img/placeholder-cat.svg') }}" alt="" loading="lazy">
       {% endif %}
       <span class="badge badge-{{ pet.status }}">{{ pet.status | status_label }}</span>
+      <span class="badge badge-species">{{ pet.species | species_label }}</span>
     </div>
     <div class="pet-card-body">
       <h3>{{ pet.name }}</h3>

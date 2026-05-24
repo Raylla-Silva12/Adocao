@@ -54,6 +54,9 @@ class Config:
     ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@example.com")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 
+    # Contato para adoção (botão "Quero adotar")
+    CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "larparabigodinhos@gmail.com")
+
 
 class DevelopmentConfig(Config):
     """Configurações de desenvolvimento."""

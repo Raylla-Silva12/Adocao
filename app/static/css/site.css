@@ -339,6 +339,13 @@ img {
 
 .badge-pending { background: var(--color-badge-pending); }
 .badge-adopted { background: var(--color-badge-adopted); }
+.badge-species {
+  top: auto;
+  bottom: 0.75rem;
+  right: auto;
+  left: 0.75rem;
+  background: rgba(31, 41, 51, 0.75);
+}
 .badge-lg { position: static; display: inline-block; margin-top: 0.75rem; }
 
 /* Detail */
@@ -534,6 +541,12 @@ img {
   font-size: 0.85rem;
   color: var(--color-muted);
   margin-top: 1rem;
+}
+
+.field-hint {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  margin: 0.25rem 0 0.75rem;
 }
 
 .back-link {

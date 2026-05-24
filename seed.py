@@ -67,11 +67,22 @@ def seed_database():
                     is_neutered=True,
                     status="available",
                 ),
+                Pet(
+                    name="Mel",
+                    species="cao",
+                    breed="SRD",
+                    age_years=3,
+                    description="Leal e protetor. Adora passeios e brincadeiras ao ar livre.",
+                    temperament="dócil",
+                    is_vaccinated=True,
+                    is_neutered=True,
+                    status="available",
+                ),
             ]
             for pet in demos:
                 db.session.add(pet)
             db.session.commit()
-            print(f"✓ {len(demos)} gatos de exemplo criados")
+            print(f"✓ {len(demos)} pets de exemplo criados")
         
         print("✓ Banco de dados inicializado com sucesso!")
 

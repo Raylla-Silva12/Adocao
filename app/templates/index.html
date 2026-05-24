@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Início — Adoção de Gatos{% endblock %}
+{% block title %}Início — Adoção de Gatos e Cães{% endblock %}
 
 {% block content %}
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">Adoção responsável</p>
-      <h1>Um lar para cada bigodinho</h1>
+      <h1>Um lar para cada pet</h1>
       <p class="lead">
-        Conheça gatos castrados, vacinados e cheios de carinho esperando por uma família.
+        Conheça gatos e cães castrados, vacinados e cheios de carinho esperando por uma família.
         {% if total_available > 0 %}
-        Hoje temos <strong>{{ total_available }}</strong> gatinho{{ 's' if total_available != 1 else '' }} disponível{{ 'is' if total_available != 1 else '' }}.
+        Hoje temos <strong>{{ total_available }}</strong> pet{{ 's' if total_available != 1 else '' }} disponível{{ 'is' if total_available != 1 else '' }}.
         {% endif %}
       </p>
       <div class="hero-actions">
-        <a href="{{ url_for('web.list_pets') }}" class="btn btn-primary">Ver gatos para adoção</a>
+        <a href="{{ url_for('web.list_pets') }}" class="btn btn-primary">Ver pets para adoção</a>
         <a href="#destaques" class="btn btn-ghost">Conhecer destaques</a>
       </div>
     </div>
@@ -41,7 +41,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <p>Ainda não há gatos cadastrados. Acesse o <a href="{{ url_for('web.admin_login_page') }}">painel admin</a> para adicionar.</p>
+      <p>Ainda não há pets cadastrados. Acesse o <a href="{{ url_for('web.admin_login_page') }}">painel admin</a> para adicionar.</p>
     </div>
     {% endif %}
   </div>
@@ -51,7 +51,7 @@
   <div class="container steps">
     <h2>Como funciona a adoção</h2>
     <ol class="steps-list">
-      <li><span>1</span> Escolha um gato no catálogo e leia o perfil com atenção.</li>
+      <li><span>1</span> Escolha um gato ou cão no catálogo e leia o perfil com atenção.</li>
       <li><span>2</span> Entre em contato com a equipe (WhatsApp ou e-mail da ONG).</li>
       <li><span>3</span> Visita, entrevista e termo de responsabilidade — tudo com calma.</li>
       <li><span>4</span> Se der match, seu novo companheiro vai para casa!</li>

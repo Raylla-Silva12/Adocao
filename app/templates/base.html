@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Adoção de Gatos{% endblock %}</title>
+  <title>{% block title %}Adoção de Gatos e Cães{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,12 +14,12 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="{{ url_for('web.home') }}" class="logo">
-        <span class="logo-icon" aria-hidden="true">🐱</span>
-        <span class="logo-text">Adoção de Gatos</span>
+        <span class="logo-icon" aria-hidden="true">🐾</span>
+        <span class="logo-text">Gatos e Cães</span>
       </a>
       <nav class="nav-main" aria-label="Principal">
         <a href="{{ url_for('web.home') }}" class="{% if request.endpoint == 'web.home' %}active{% endif %}">Início</a>
-        <a href="{{ url_for('web.list_pets') }}" class="{% if request.endpoint in ('web.list_pets', 'web.pet_detail') %}active{% endif %}">Gatos</a>
+        <a href="{{ url_for('web.list_pets') }}" class="{% if request.endpoint in ('web.list_pets', 'web.pet_detail') %}active{% endif %}">Pets</a>
         <a href="{{ url_for('web.admin_login_page') }}" class="nav-admin">Área admin</a>
       </nav>
       <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
@@ -35,11 +35,12 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>
-        <strong>Adoção de Gatos</strong>
-        <p>Conectando famílias e felinos que precisam de um lar.</p>
+        <strong>Adoção de Gatos e Cães</strong>
+        <p>Conectando famílias e pets que precisam de um lar.</p>
       </div>
       <div class="footer-links">
-        <a href="{{ url_for('web.list_pets') }}">Ver gatos</a>
+        <a href="{{ url_for('web.list_pets') }}">Ver pets</a>
+        <a href="mailto:{{ contact_email }}?subject={{ 'Interesse em adoção' | urlencode }}">Fale conosco</a>
         <a href="/health">Status da API</a>
       </div>
       <p class="footer-copy">&copy; 2026 — Projeto de adoção responsável</p>
