@@ -90,15 +90,16 @@ Write-Host "JWT Secret:      $JwtSecret" -ForegroundColor Cyan
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Green
 Write-Host ""
 
-# Build e deploy
-Write-Host "📦 Fazendo build da imagem Docker..." -ForegroundColor Yellow
-gcloud builds submit --region=$Region `
-    --tag gcr.io/$ProjectId/adocao-gatos:latest
+# Build e deploy (tag unica + sem cache do Docker)
+$BuildTag = Get-Date -Format "yyyyMMdd-HHmmss"
+Write-Host "📦 Fazendo build da imagem Docker (tag: $BuildTag)..." -ForegroundColor Yellow
+gcloud builds submit --config cloudbuild.yaml `
+    --substitutions=SHORT_SHA=$BuildTag
 
 Write-Host ""
 Write-Host "📤 Deployando no Cloud Run..." -ForegroundColor Yellow
 gcloud run deploy adocao-gatos `
-    --image gcr.io/$ProjectId/adocao-gatos:latest `
+    --image gcr.io/$ProjectId/adocao-gatos:$BuildTag `
     --platform managed `
     --region $Region `
     --allow-unauthenticated `

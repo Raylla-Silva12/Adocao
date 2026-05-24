@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280" fill="none">
-  <!-- Background circle -->
-  <circle cx="150" cy="140" r="120" fill="#FED7AA" opacity="0.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="280" viewBox="0 0 300 280" fill="none" role="img" aria-label="Ilustração de um gato">
+  <!-- Fundo claro para contrastar com o card -->
+  <rect width="300" height="280" rx="24" fill="#FFFFFF"/>
+  <circle cx="150" cy="140" r="118" fill="#FFF7ED" stroke="#FED7AA" stroke-width="2"/>
   
   <!-- Cat body -->
   <ellipse cx="150" cy="180" rx="65" ry="50" fill="#F97316"/>

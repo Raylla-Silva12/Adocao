@@ -25,14 +25,15 @@ echo 🔐 Autenticando...
 call gcloud auth login
 call gcloud config set project !PROJECT_ID!
 
-REM Build da imagem
-echo 🔨 Fazendo build da imagem Docker...
-call gcloud builds submit --tag gcr.io/!PROJECT_ID!/!IMAGE_NAME!:latest
+REM Tag unica evita Cloud Run reutilizar imagem antiga com :latest
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd-HHmmss"') do set BUILD_TAG=%%i
+echo 🔨 Fazendo build da imagem Docker (tag: !BUILD_TAG!)...
+call gcloud builds submit --config cloudbuild.yaml --substitutions=SHORT_SHA=!BUILD_TAG!
 
 REM Deploy no Cloud Run
 echo 📤 Fazendo deploy no Cloud Run...
 call gcloud run deploy !SERVICE_NAME! ^
-  --image gcr.io/!PROJECT_ID!/!IMAGE_NAME!:latest ^
+  --image gcr.io/!PROJECT_ID!/!IMAGE_NAME!:!BUILD_TAG! ^
   --platform managed ^
   --region !REGION! ^
   --allow-unauthenticated ^

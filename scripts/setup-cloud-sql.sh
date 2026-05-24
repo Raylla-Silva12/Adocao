@@ -76,14 +76,15 @@ echo "Password:        $DB_PASSWORD"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Deploy no Cloud Run com Cloud SQL
-echo "📦 Fazendo deploy no Cloud Run..."
-gcloud builds submit --region=$REGION \
-    --tag gcr.io/$PROJECT_ID/adocao-gatos:latest
+# Build e deploy (tag unica + sem cache do Docker)
+BUILD_TAG=$(date +%Y%m%d-%H%M%S)
+echo "📦 Fazendo build da imagem Docker (tag: $BUILD_TAG)..."
+gcloud builds submit --config cloudbuild.yaml \
+    --substitutions=SHORT_SHA=$BUILD_TAG
 
 echo "📤 Deployando no Cloud Run..."
 gcloud run deploy adocao-gatos \
-    --image gcr.io/$PROJECT_ID/adocao-gatos:latest \
+    --image gcr.io/$PROJECT_ID/adocao-gatos:$BUILD_TAG \
     --platform managed \
     --region $REGION \
     --allow-unauthenticated \

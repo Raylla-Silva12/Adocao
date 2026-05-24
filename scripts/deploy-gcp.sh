@@ -28,15 +28,18 @@ echo ""
 echo "🔐 Configurando gcloud..."
 gcloud config set project $PROJECT_ID
 
-# Build e push via Cloud Build
-echo "🔨 Enviando para Cloud Build (isso vai levar alguns minutos)..."
-gcloud builds submit --region=$REGION \
-    --tag gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+# Tag unica evita Cloud Run reutilizar imagem antiga com :latest
+BUILD_TAG=$(date +%Y%m%d-%H%M%S)
+
+# Build e push via Cloud Build (sem cache para incluir templates/static novos)
+echo "🔨 Enviando para Cloud Build (tag: $BUILD_TAG)..."
+gcloud builds submit --config cloudbuild.yaml \
+    --substitutions=SHORT_SHA=$BUILD_TAG
 
 # Deploy no Cloud Run
 echo "📤 Fazendo deploy no Cloud Run..."
 gcloud run deploy $SERVICE_NAME \
-    --image gcr.io/$PROJECT_ID/$SERVICE_NAME:latest \
+    --image gcr.io/$PROJECT_ID/$SERVICE_NAME:$BUILD_TAG \
     --platform managed \
     --region $REGION \
     --allow-unauthenticated \

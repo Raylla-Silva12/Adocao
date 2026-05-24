@@ -1,8 +1,9 @@
 steps:
-  # Build the image
+  # Build the image (--no-cache garante que templates/static novos entrem na imagem)
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
+      - '--no-cache'
       - '-t'
       - 'gcr.io/$PROJECT_ID/adocao-gatos:$SHORT_SHA'
       - '-t'
@@ -14,18 +15,6 @@ steps:
     args:
       - 'push'
       - 'gcr.io/$PROJECT_ID/adocao-gatos:$SHORT_SHA'
-
-  # Deploy using gcloud
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'adocao-gatos'
-      - '--image=gcr.io/$PROJECT_ID/adocao-gatos:$SHORT_SHA'
-      - '--platform=managed'
-      - '--region=us-central1'
-      - '--allow-unauthenticated'
-      - '--set-env-vars=FLASK_ENV=production'
 
 images:
   - 'gcr.io/$PROJECT_ID/adocao-gatos:$SHORT_SHA'
