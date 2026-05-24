@@ -202,7 +202,7 @@ Veja o arquivo `BACKEND.md` para documentação completa com:
 
 ### Use Insomnia ou Postman
 
-1. Importe o arquivo `insomnia_collection.json`
+1. Importe o arquivo `docs/insomnia_collection.json`
 2. Configure a variável `baseUrl`
 3. Após fazer login, copie o token para `{{ token }}`
 4. Pronto para testar todos os endpoints!
@@ -234,12 +234,12 @@ gcloud sql databases create adocao_gatos --instance adocao-db
 
 3. Faça deploy:
 ```bash
-./deploy.sh seu-project-id
+./scripts/setup-cloud-sql.sh seu-project-id us-central1
 ```
 
 ## 📞 Suporte
 
-- Leia `BACKEND.md` para documentação completa
+- Leia `docs/BACKEND.md` para documentação completa
 - Execute `pytest -v` para verificar se tudo está funcionando
 - Verifique os logs: `docker-compose logs -f app`
 

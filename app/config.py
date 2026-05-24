@@ -6,6 +6,10 @@ import os
 import urllib.parse
 from datetime import timedelta
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def _build_database_uri() -> str:
     """
@@ -40,7 +44,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # JWT
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "seu-secret-key-super-secreto")
+    JWT_SECRET_KEY = os.getenv(
+        "JWT_SECRET_KEY",
+        "dev-jwt-secret-key-minimo-32-chars!!",
+    )
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
 
     # Upload
@@ -69,6 +76,7 @@ class TestingConfig(Config):
     DEBUG = True
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    JWT_SECRET_KEY = "test-jwt-secret-key-minimo-32-chars!!"
 
 
 class ProductionConfig(Config):

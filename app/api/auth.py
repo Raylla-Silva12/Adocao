@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.auth import authenticate_admin, register_admin, get_admin_by_id
 from app.utils.errors import ValidationError, UnauthorizedError
-from app.utils.validators import validate_admin_data
+from app.utils.validators import validate_admin_data, validate_login_data
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -22,8 +22,8 @@ def login():
     """
     try:
         data = request.get_json() or {}
-        validate_admin_data(data)
-        
+        validate_login_data(data)
+
         token, admin = authenticate_admin(data["email"], data["password"])
         
         return jsonify({

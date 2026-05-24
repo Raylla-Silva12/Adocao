@@ -44,6 +44,27 @@ def validate_pet_photo(photo_file, existing_photo_url=None):
         raise ValidationError("Foto do pet é obrigatória")
 
 
+def validate_login_data(data):
+    """Valida credenciais de login (sem regras de cadastro)."""
+    errors = []
+
+    email = data.get("email", "").strip()
+    password = data.get("password", "")
+
+    if not email:
+        errors.append("Email é obrigatório")
+    elif "@" not in email or "." not in email.split("@")[1]:
+        errors.append("Email inválido")
+
+    if not password:
+        errors.append("Senha é obrigatória")
+
+    if errors:
+        raise ValidationError(", ".join(errors))
+
+    return True
+
+
 def validate_admin_data(data):
     """Valida dados de admin."""
     errors = []

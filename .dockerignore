@@ -6,8 +6,9 @@ __pycache__/
 .Python
 env/
 venv/
-.venv
+.venv/
 .env
+.env.*
 
 # IDE
 .vscode/
@@ -26,11 +27,12 @@ uploads/
 *.sqlite
 .coverage
 htmlcov/
-
-# Testing
+docs/
+scripts/
+tests/
 .pytest_cache/
 .tox/
-
-# Git
+*.md
+!README.md
 .git/
 .gitignore

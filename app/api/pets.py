@@ -12,6 +12,20 @@ from app.utils.validators import validate_pet_data, validate_pet_photo
 pets_bp = Blueprint("pets", __name__)
 
 
+def _get_pet(pet_id):
+    return db.session.get(Pet, pet_id)
+
+
+def _pet_validation_data(pet, data):
+    """Mescla dados existentes com a requisição para validação parcial."""
+    return {
+        "name": data.get("name", pet.name),
+        "species": data.get("species", pet.species),
+        "age_years": data.get("age_years", pet.age_years),
+        "owner_contact": data.get("owner_contact", pet.owner_contact or ""),
+    }
+
+
 def _is_admin_request():
     """True quando a requisição traz JWT válido de admin."""
     try:
@@ -33,30 +47,26 @@ def list_pets():
     Lista todos os pets.
     GET /api/pets?status=available&limit=10&offset=0
     """
-    try:
-        status = request.args.get("status")
-        limit = request.args.get("limit", 20, type=int)
-        offset = request.args.get("offset", 0, type=int)
-        
-        # Limitar valores
-        limit = min(limit, 100)
-        
-        query = Pet.query
-        if status:
-            query = query.filter_by(status=status)
-        
-        total = query.count()
-        pets = query.order_by(Pet.created_at.desc()).limit(limit).offset(offset).all()
-        
-        return jsonify({
-            "total": total,
-            "limit": limit,
-            "offset": offset,
-            "pets": [_serialize_pet(pet) for pet in pets]
-        }), 200
-    
-    except Exception as e:
-        raise Exception(f"Erro ao listar pets: {str(e)}")
+    status = request.args.get("status")
+    limit = request.args.get("limit", 20, type=int)
+    offset = request.args.get("offset", 0, type=int)
+
+    # Limitar valores
+    limit = min(limit, 100)
+
+    query = Pet.query
+    if status:
+        query = query.filter_by(status=status)
+
+    total = query.count()
+    pets = query.order_by(Pet.created_at.desc()).limit(limit).offset(offset).all()
+
+    return jsonify({
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "pets": [_serialize_pet(pet) for pet in pets]
+    }), 200
 
 
 @pets_bp.route("/<pet_id>", methods=["GET"])
@@ -65,16 +75,12 @@ def get_pet(pet_id):
     Obtém detalhes de um pet específico.
     GET /api/pets/<pet_id>
     """
-    try:
-        pet = Pet.query.get(pet_id)
-        
-        if not pet:
-            raise NotFoundError("Pet não encontrado")
-        
-        return jsonify(_serialize_pet(pet)), 200
-    
-    except Exception as e:
-        raise Exception(f"Erro ao obter pet: {str(e)}")
+    pet = _get_pet(pet_id)
+
+    if not pet:
+        raise NotFoundError("Pet não encontrado")
+
+    return jsonify(_serialize_pet(pet)), 200
 
 
 @pets_bp.route("", methods=["POST"])
@@ -154,7 +160,7 @@ def update_pet(pet_id):
     Content-Type: multipart/form-data
     """
     try:
-        pet = Pet.query.get(pet_id)
+        pet = _get_pet(pet_id)
         
         if not pet:
             raise NotFoundError("Pet não encontrado")
@@ -183,7 +189,7 @@ def update_pet(pet_id):
         if "owner_contact" in data:
             pet.owner_contact = data["owner_contact"].strip()
 
-        validate_pet_data(data)
+        validate_pet_data(_pet_validation_data(pet, data))
 
         photo_file = request.files.get("photo")
         if photo_file and photo_file.filename:
@@ -203,8 +209,8 @@ def update_pet(pet_id):
             "pet": _serialize_pet(pet, admin=True)
         }), 200
     
-    except (NotFoundError, ValidationError) as e:
-        raise e
+    except (NotFoundError, ValidationError):
+        raise
     except Exception as e:
         db.session.rollback()
         raise Exception(f"Erro ao atualizar pet: {str(e)}")
@@ -219,7 +225,7 @@ def delete_pet(pet_id):
     Header: Authorization: Bearer <token>
     """
     try:
-        pet = Pet.query.get(pet_id)
+        pet = _get_pet(pet_id)
         
         if not pet:
             raise NotFoundError("Pet não encontrado")
@@ -233,8 +239,8 @@ def delete_pet(pet_id):
         
         return jsonify({"message": "Pet deletado com sucesso"}), 200
     
-    except NotFoundError as e:
-        raise e
+    except NotFoundError:
+        raise
     except Exception as e:
         db.session.rollback()
         raise Exception(f"Erro ao deletar pet: {str(e)}")
@@ -251,7 +257,7 @@ def upload_pet_photo(pet_id):
     Body: photo (file)
     """
     try:
-        pet = Pet.query.get(pet_id)
+        pet = _get_pet(pet_id)
         
         if not pet:
             raise NotFoundError("Pet não encontrado")

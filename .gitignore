@@ -6,6 +6,7 @@ __pycache__/
 .Python
 env/
 venv/
+.venv/
 ENV/
 build/
 develop-eggs/
@@ -26,10 +27,16 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Variáveis de ambiente
+# Variáveis de ambiente e credenciais
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*
+*service-account*.json
+secrets/
+deploy.local.*
 
 # IDE
 .vscode/
@@ -37,7 +44,6 @@ MANIFEST
 *.swp
 *.swo
 *~
-.DS_Store
 .project
 .pydevproject
 .settings/
@@ -69,10 +75,6 @@ logs/
 # OS
 Thumbs.db
 .DS_Store
-
-# IDE específicas
-.vscode/settings.json
-.vscode/extensions.json
 
 # Arquivos temporários
 *.tmp

@@ -71,7 +71,7 @@ docker-run:
 
 deploy-gcp:
 	@read -p "Enter GCP Project ID: " PROJECT_ID; \
-	./deploy.sh $$PROJECT_ID
+	./scripts/deploy-gcp.sh $$PROJECT_ID
 
 logs:
 	docker-compose logs -f app

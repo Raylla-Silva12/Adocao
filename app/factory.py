@@ -7,10 +7,11 @@ import logging
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from app.extensions import db, migrate, jwt
-from app.config import Config
+from app.config import Config, get_config
 from app.api import auth_bp, pets_bp
 from app.web import web_bp
 from app.utils.errors import register_error_handlers
+from app.schema import upgrade_schema
 from sqlalchemy import text
 
 # Configurar logging
@@ -21,11 +22,36 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def _ensure_default_admin(app):
+    """Cria admin padrão na primeira execução (local e nuvem)."""
+    if app.config.get("TESTING"):
+        return
+
+    admin_email = app.config.get("ADMIN_EMAIL")
+    admin_password = app.config.get("ADMIN_PASSWORD")
+    if not admin_email or not admin_password:
+        return
+
+    from app.models import Admin
+    from app.auth import register_admin
+
+    if Admin.query.filter_by(email=admin_email).first():
+        return
+
+    try:
+        register_admin(admin_email, admin_password)
+        logger.info("Admin padrão criado: %s", admin_email)
+    except ValueError as exc:
+        logger.warning("Não foi possível criar admin padrão: %s", exc)
+
+
 def create_app(config_class=None):
     """Factory pattern para criar a aplicação Flask."""
     if config_class is None:
-        config_class = Config
-    
+        config_class = get_config()
+    elif isinstance(config_class, str):
+        config_class = get_config(config_class)
+
     app = Flask(__name__)
     app.config.from_object(config_class)
     
@@ -82,6 +108,8 @@ def create_app(config_class=None):
     with app.app_context():
         try:
             db.create_all()
+            upgrade_schema()
+            _ensure_default_admin(app)
             logger.info("Database tables created successfully")
         except Exception as e:
             logger.error(f"Error creating database tables: {str(e)}")

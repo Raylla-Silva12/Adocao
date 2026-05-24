@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
@@ -26,9 +24,11 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: adocao_gatos
-      JWT_SECRET_KEY: seu-secret-key-desenvolvimento
+      JWT_SECRET_KEY: dev-jwt-secret-key-minimo-32-chars!!
       ADMIN_EMAIL: admin@example.com
       ADMIN_PASSWORD: admin123
+      CONTACT_EMAIL: larparabigodinhos@gmail.com
+      UPLOAD_FOLDER: uploads
     ports:
       - "8080:8080"
     volumes:
@@ -37,7 +37,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: flask --app app run --host 0.0.0.0 --port 8080
+    command: >
+      sh -c "python seed.py &&
+             flask --app app run --host 0.0.0.0 --port 8080 --debug"
     
 volumes:
   postgres_data:

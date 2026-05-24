@@ -1,6 +1,6 @@
 @echo off
 REM Script para fazer deploy no Google Cloud Run (Windows)
-REM Uso: deploy.bat seu-project-id
+# Uso: .\scripts\deploy-gcp.bat seu-project-id [regiao]
 
 setlocal enabledelayedexpansion
 

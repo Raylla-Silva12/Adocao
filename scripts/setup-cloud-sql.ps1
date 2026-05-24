@@ -15,7 +15,7 @@ if ($ProjectId -eq "seu-project-id") {
     Write-Host "❌ Erro: Forneça seu Project ID do Google Cloud" -ForegroundColor Red
     Write-Host "Uso: .\setup-cloud-sql.ps1 seu-project-id [regiao]" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "Exemplo: .\setup-cloud-sql.ps1 project-89f158a9-2682-485e-a79 us-central1" -ForegroundColor Cyan
+    Write-Host "Exemplo: .\setup-cloud-sql.ps1 meu-projeto-gcp us-central1" -ForegroundColor Cyan
     exit 1
 }
 
@@ -106,7 +106,7 @@ gcloud run deploy adocao-gatos `
     --memory 512Mi `
     --timeout 120 `
     --max-instances 10 `
-    --set-env-vars="FLASK_ENV=production,DB_HOST=/cloudsql/$ConnectionName,DB_USER=$DbUser,DB_PASSWORD=$DbPassword,DB_NAME=$DbName,JWT_SECRET_KEY=$JwtSecret,ADMIN_EMAIL=admin@example.com,ADMIN_PASSWORD=admin123" `
+    --set-env-vars="FLASK_ENV=production,DB_HOST=/cloudsql/$ConnectionName,DB_USER=$DbUser,DB_PASSWORD=$DbPassword,DB_NAME=$DbName,JWT_SECRET_KEY=$JwtSecret,ADMIN_EMAIL=admin@example.com,ADMIN_PASSWORD=admin123,CONTACT_EMAIL=larparabigodinhos@gmail.com" `
     --add-cloudsql-instances $ConnectionName
 
 Write-Host ""

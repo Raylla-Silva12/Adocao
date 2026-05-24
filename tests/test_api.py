@@ -2,12 +2,35 @@
 Testes da API.
 Execute com: pytest tests/test_api.py
 """
+import io
 import pytest
 from app import create_app
 from app.extensions import db
 from app.models import Pet, Admin
 from app.auth import register_admin
-import json
+
+MINIMAL_PNG = (
+    b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+    b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01"
+    b"\x00\x00\x05\x00\x01\r\n-\xdb\x00\x00\x00\x00IEND\xaeB`\x82"
+)
+
+
+def sample_photo():
+    return (io.BytesIO(MINIMAL_PNG), "test.png")
+
+
+def pet_form(**extra):
+    data = {
+        "name": "Miau",
+        "species": "gato",
+        "breed": "Siames",
+        "age_years": "2",
+        "owner_contact": "11999999999",
+        "photo": sample_photo(),
+    }
+    data.update(extra)
+    return data
 
 
 @pytest.fixture
@@ -158,13 +181,8 @@ class TestPets:
         """Testa criação bem-sucedida de pet."""
         response = client.post(
             "/api/pets",
-            data={
-                "name": "Miau",
-                "species": "gato",
-                "breed": "Siamês",
-                "age_years": "2"
-            },
-            headers={"Authorization": f"Bearer {admin_token}"}
+            data=pet_form(),
+            headers={"Authorization": f"Bearer {admin_token}"},
         )
         
         assert response.status_code == 201
@@ -185,14 +203,19 @@ class TestPets:
     def test_update_pet_success(self, client, app, admin_token):
         """Testa atualização bem-sucedida de pet."""
         with app.app_context():
-            pet = Pet(name="Miau", species="gato")
+            pet = Pet(
+                name="Miau",
+                species="gato",
+                owner_contact="11999999999",
+                photo_url="/uploads/existing.png",
+            )
             db.session.add(pet)
             db.session.commit()
             pet_id = pet.id
         
         response = client.put(
             f"/api/pets/{pet_id}",
-            data={"name": "Novo Nome"},
+            data={"name": "Novo Nome", "owner_contact": "11999999999"},
             headers={"Authorization": f"Bearer {admin_token}"}
         )
         
@@ -203,14 +226,19 @@ class TestPets:
     def test_delete_pet_success(self, client, app, admin_token):
         """Testa exclusão bem-sucedida de pet."""
         with app.app_context():
-            pet = Pet(name="Miau", species="gato")
+            pet = Pet(
+                name="Miau",
+                species="gato",
+                owner_contact="11999999999",
+                photo_url="/uploads/existing.png",
+            )
             db.session.add(pet)
             db.session.commit()
             pet_id = pet.id
-        
+
         response = client.delete(
             f"/api/pets/{pet_id}",
-            headers={"Authorization": f"Bearer {admin_token}"}
+            headers={"Authorization": f"Bearer {admin_token}"},
         )
         
         assert response.status_code == 200

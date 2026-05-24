@@ -1,6 +1,7 @@
 # Configura Google Cloud Storage para fotos dos pets (deploy existente no Cloud Run)
 param(
-    [string]$ProjectId = "project-89f158a9-2682-485e-a79",
+    [Parameter(Mandatory = $true)]
+    [string]$ProjectId,
     [string]$Region = "us-central1",
     [string]$ServiceName = "adocao-gatos"
 )

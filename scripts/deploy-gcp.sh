@@ -1,6 +1,6 @@
 #!/bin/bash
-# Deploy simples para Google Cloud Run
-# Uso: ./deploy-cloud-run.sh seu-project-id
+# Deploy simples para Google Cloud Run (sem provisionar Cloud SQL)
+# Uso: ./scripts/deploy-gcp.sh seu-project-id [regiao]
 
 set -e
 
@@ -9,10 +9,10 @@ REGION=${2:-us-central1}
 SERVICE_NAME="adocao-gatos"
 
 if [ "$PROJECT_ID" = "seu-project-id" ]; then
-    echo "❌ Erro: Forneça seu Project ID do Google Cloud"
-    echo "Uso: ./deploy-cloud-run.sh seu-project-id [regiao]"
+    echo "Erro: forneca seu Project ID do Google Cloud"
+    echo "Uso: ./scripts/deploy-gcp.sh seu-project-id [regiao]"
     echo ""
-    echo "Exemplo: ./deploy-cloud-run.sh meu-projeto us-central1"
+    echo "Exemplo: ./scripts/deploy-gcp.sh meu-projeto us-central1"
     exit 1
 fi
 

@@ -3,7 +3,6 @@ Script para gerenciar o banco de dados.
 """
 import os
 import click
-from sqlalchemy import text
 from app import create_app
 from app.extensions import db
 from app.models import Admin, Pet
@@ -54,11 +53,9 @@ def seed_admin():
 def upgrade():
     """Aplica alterações incrementais no schema (colunas novas)."""
     with app.app_context():
-        db.session.execute(text(
-            "ALTER TABLE pets ADD COLUMN IF NOT EXISTS owner_contact VARCHAR(50)"
-        ))
-        db.session.commit()
-        click.echo("✓ Schema atualizado (owner_contact em pets).")
+        from app.schema import upgrade_schema
+        upgrade_schema()
+        click.echo("✓ Schema atualizado.")
 
 
 @cli.command()

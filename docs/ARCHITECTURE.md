@@ -12,10 +12,17 @@ adocao-gatos/
 │   ├── models.py                # Modelos SQLAlchemy
 │   ├── auth.py                  # Lógica de autenticação
 │   │
-│   ├── api/                     # Blueprints com rotas
+│   ├── api/                     # Blueprints com rotas REST
 │   │   ├── __init__.py
 │   │   ├── auth.py              # Endpoints de autenticação
 │   │   └── pets.py              # Endpoints de pets (CRUD)
+│   │
+│   ├── web/                     # Interface HTML (site + admin)
+│   │   ├── routes.py
+│   │   └── email_templates.py
+│   │
+│   ├── templates/               # Templates Jinja2
+│   ├── static/                  # CSS, JS, imagens
 │   │
 │   └── utils/                   # Utilitários
 │       ├── __init__.py
@@ -29,6 +36,21 @@ adocao-gatos/
 │
 ├── uploads/                      # Pasta de uploads (gitignored)
 │   └── *.jpg, *.png, etc
+│
+├── docs/                         # Documentação
+│   ├── QUICKSTART.md
+│   ├── BACKEND.md
+│   ├── ARCHITECTURE.md
+│   ├── CLOUD_SQL.md
+│   ├── DATABASE.md
+│   └── insomnia_collection.json
+│
+├── scripts/                      # Deploy e setup GCP
+│   ├── setup-cloud-sql.sh
+│   ├── setup-cloud-sql.ps1
+│   ├── setup-gcs.ps1
+│   ├── deploy-gcp.sh
+│   └── deploy-gcp.bat
 │
 ├── app.py                        # Entry point da aplicação
 ├── seed.py                       # Script para popular o banco
@@ -45,16 +67,6 @@ adocao-gatos/
 ├── Makefile                      # Comandos úteis
 │
 ├── cloudbuild.yaml               # CI/CD do Google Cloud
-├── app.yaml                      # Configuração do App Engine
-├── deploy.sh                     # Script de deployment (Unix)
-├── deploy.bat                    # Script de deployment (Windows)
-│
-├── insomnia_collection.json      # Collection para testar API
-│
-├── BACKEND.md                    # Documentação completa
-├── QUICKSTART.md                 # Guia rápido
-├── CLOUD_SQL.md                  # Guia do Cloud SQL
-├── ARCHITECTURE.md               # Este arquivo
 │
 └── README.md                     # Overview do projeto
 ```

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Setup Cloud SQL + Cloud Run Deploy
 # Este script cria uma instância Cloud SQL e faz o deploy da app
-# Uso: ./setup-cloud-sql.sh seu-project-id sua-regiao
+# Uso: ./scripts/setup-cloud-sql.sh seu-project-id [regiao]
 
 set -e
 
@@ -15,9 +15,9 @@ DB_PASSWORD=$(openssl rand -base64 32)  # Gera senha aleatória segura
 # Validação
 if [ "$PROJECT_ID" = "seu-project-id" ]; then
     echo "❌ Erro: Forneça seu Project ID do Google Cloud"
-    echo "Uso: ./setup-cloud-sql.sh seu-project-id [regiao]"
+    echo "Uso: ./scripts/setup-cloud-sql.sh seu-project-id [regiao]"
     echo ""
-    echo "Exemplo: ./setup-cloud-sql.sh meu-projeto us-central1"
+    echo "Exemplo: ./scripts/setup-cloud-sql.sh meu-projeto us-central1"
     exit 1
 fi
 
@@ -99,7 +99,8 @@ DB_PASSWORD=$DB_PASSWORD,\
 DB_NAME=$DB_NAME,\
 JWT_SECRET_KEY=$(openssl rand -base64 32),\
 ADMIN_EMAIL=admin@example.com,\
-ADMIN_PASSWORD=admin123 \
+ADMIN_PASSWORD=admin123,\
+CONTACT_EMAIL=larparabigodinhos@gmail.com \
     --add-cloudsql-instances $CONNECTION_NAME
 
 echo ""
