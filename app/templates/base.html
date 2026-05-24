@@ -40,7 +40,8 @@
       </div>
       <div class="footer-links">
         <a href="{{ url_for('web.list_pets') }}">Ver pets</a>
-        <a href="mailto:{{ contact_email }}?subject={{ 'Interesse em adoção' | urlencode }}">Fale conosco</a>
+        <a href="{{ email_compose_url(contact_email, list_pet_subject, list_pet_body) }}" target="_blank" rel="noopener noreferrer">Divulgar um pet</a>
+        <a href="{{ url_for('web.home') }}#divulgar-pet">Como divulgar</a>
         <a href="/health">Status da API</a>
       </div>
       <p class="footer-copy">&copy; 2026 — Projeto de adoção responsável</p>

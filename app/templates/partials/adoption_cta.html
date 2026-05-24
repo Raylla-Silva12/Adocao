@@ -1,0 +1,18 @@
+      {% if pet.status == 'available' %}
+      <div class="detail-cta">
+        <p>Interessado em adotar? Fale com nossa equipe.</p>
+        {% set pet_type = 'cão' if pet.species == 'cao' else 'gato' %}
+        {% set adoption_subject = adopt_pet_email_subject(pet.name) %}
+        {% set adoption_body = adopt_pet_email_body(pet.name, pet_type, url_for('web.pet_detail', pet_id=pet.id, _external=True)) %}
+        <div class="detail-cta-actions">
+          <a href="{{ email_compose_url(contact_email, adoption_subject, adoption_body) }}"
+             class="btn btn-primary"
+             target="_blank"
+             rel="noopener noreferrer">Quero adotar</a>
+          <a href="{{ url_for('web.list_pets') }}" class="btn btn-ghost">Ver outros pets</a>
+        </div>
+        <p class="detail-cta-hint">
+          Abre o Gmail em uma nova aba com um formulário para você preencher.
+          Se preferir, escreva para <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+        </p>
+      </div>

@@ -32,14 +32,7 @@
       </div>
       {% endif %}
       {% if pet.status == 'available' %}
-      <div class="detail-cta">
-        <p>Interessado em adotar? Fale com nossa equipe.</p>
-        {% set pet_type = 'cão' if pet.species == 'cao' else 'gato' %}
-        {% set adoption_subject = ('Interesse em adotar ' ~ pet.name) | urlencode %}
-        {% set adoption_body = ('Olá! Tenho interesse em adotar o ' ~ pet_type ~ ' ' ~ pet.name ~ '.\n\nVi o perfil em: ' ~ url_for('web.pet_detail', pet_id=pet.id, _external=True) ~ '\n\nAguardo contato.') | urlencode %}
-        <a href="mailto:{{ contact_email }}?subject={{ adoption_subject }}&body={{ adoption_body }}" class="btn btn-primary">Quero adotar</a>
-        <a href="{{ url_for('web.list_pets') }}" class="btn btn-ghost">Ver outros pets</a>
-      </div>
+      {% include "partials/adoption_cta.html" %}
       {% else %}
       <p class="notice">{{ pet.name }} não está disponível no momento.</p>
       <a href="{{ url_for('web.list_pets', status='available') }}" class="btn btn-primary">Ver disponíveis</a>

@@ -397,9 +397,24 @@ img {
 
 .detail-cta {
   margin-top: 1.5rem;
+}
+
+.detail-cta-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.detail-cta-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.detail-cta-hint a {
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 .notice {
@@ -458,6 +473,43 @@ img {
   border-radius: 50%;
   font-weight: 700;
   margin-bottom: 0.5rem;
+}
+
+.list-pet-cta {
+  max-width: 720px;
+}
+
+.lead-sm {
+  color: var(--color-muted);
+  margin: 0.5rem 0 1.25rem;
+}
+
+.info-checklist {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.info-checklist h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem;
+}
+
+.info-checklist h3:not(:first-child) {
+  margin-top: 1.25rem;
+}
+
+.info-checklist ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--color-muted);
+}
+
+.info-checklist li + li {
+  margin-top: 0.35rem;
 }
 
 .empty-state {

@@ -2,8 +2,16 @@
 Rotas da interface web (HTML).
 A API REST continua em /api/*.
 """
+import urllib.parse
+
 from flask import Blueprint, render_template, request, abort, redirect, url_for
 from app.models import Pet
+from app.web.email_templates import (
+    LIST_PET_SUBJECT,
+    LIST_PET_BODY,
+    adopt_pet_subject,
+    adopt_pet_body,
+)
 
 web_bp = Blueprint("web", __name__)
 
@@ -37,9 +45,49 @@ def species_label_filter(species):
 
 @web_bp.app_context_processor
 def inject_contact():
-    """Disponibiliza e-mail de contato nos templates."""
+    """Disponibiliza e-mail e textos de contato nos templates."""
     from flask import current_app
-    return {"contact_email": current_app.config["CONTACT_EMAIL"]}
+    return {
+        "contact_email": current_app.config["CONTACT_EMAIL"],
+        "list_pet_subject": LIST_PET_SUBJECT,
+        "list_pet_body": LIST_PET_BODY,
+    }
+
+
+@web_bp.app_template_global()
+def adopt_pet_email_subject(pet_name):
+    return adopt_pet_subject(pet_name)
+
+
+@web_bp.app_template_global()
+def adopt_pet_email_body(pet_name, pet_type, profile_url):
+    return adopt_pet_body(pet_name, pet_type, profile_url)
+
+
+@web_bp.app_template_global()
+def email_compose_url(email, subject, body):
+    """
+    Gera link para compor e-mail no navegador.
+    Gmail abre na web; outros endereços usam mailto.
+    """
+    if email.lower().endswith("@gmail.com"):
+        params = urllib.parse.urlencode(
+            {
+                "view": "cm",
+                "fs": "1",
+                "to": email,
+                "su": subject,
+                "body": body,
+            },
+            quote_via=urllib.parse.quote,
+        )
+        return f"https://mail.google.com/mail/?{params}"
+
+    params = urllib.parse.urlencode(
+        {"subject": subject, "body": body},
+        quote_via=urllib.parse.quote,
+    )
+    return f"mailto:{email}?{params}"
 
 
 @web_bp.route("/")
