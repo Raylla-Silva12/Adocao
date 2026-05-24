@@ -1,7 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Sem foto">
-  <rect width="400" height="300" fill="#f0ebe3"/>
-  <circle cx="200" cy="130" r="50" fill="#c45c26" opacity="0.25"/>
-  <path d="M155 95 L165 75 L175 95 M225 95 L235 75 L245 95" stroke="#c45c26" stroke-width="6" fill="none" stroke-linecap="round"/>
-  <ellipse cx="200" cy="155" rx="70" ry="55" fill="#c45c26" opacity="0.35"/>
-  <text x="200" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#5f6c7b">Sem foto</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#F1F5F9"/>
+  
+  <!-- Cat silhouette -->
+  <g transform="translate(200, 150)">
+    <!-- Body -->
+    <ellipse cx="0" cy="30" rx="45" ry="35" fill="#CBD5E1"/>
+    
+    <!-- Head -->
+    <circle cx="0" cy="-15" r="38" fill="#CBD5E1"/>
+    
+    <!-- Ears -->
+    <path d="M-30 -40 L-40 -75 L-15 -50 Z" fill="#CBD5E1"/>
+    <path d="M30 -40 L40 -75 L15 -50 Z" fill="#CBD5E1"/>
+    <path d="M-28 -42 L-35 -65 L-18 -50 Z" fill="#E2E8F0"/>
+    <path d="M28 -42 L35 -65 L18 -50 Z" fill="#E2E8F0"/>
+    
+    <!-- Eyes -->
+    <circle cx="-15" cy="-20" r="6" fill="#94A3B8"/>
+    <circle cx="15" cy="-20" r="6" fill="#94A3B8"/>
+    
+    <!-- Nose -->
+    <path d="M0 -5 L-5 3 L5 3 Z" fill="#94A3B8"/>
+    
+    <!-- Tail -->
+    <path d="M45 35 Q80 20 75 -10" stroke="#CBD5E1" stroke-width="14" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="250" text-anchor="middle" fill="#94A3B8" font-family="system-ui" font-size="14" font-weight="500">Foto do gato</text>
 </svg>

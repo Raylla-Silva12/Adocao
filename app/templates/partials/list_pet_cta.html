@@ -1,13 +1,16 @@
 <section class="section section-muted" id="divulgar-pet">
   <div class="container list-pet-cta">
-    <h2>Quer colocar um pet para adoção?</h2>
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+      <span style="font-size: 1.75rem;">🏠</span>
+      <h2 style="margin: 0;">Quer colocar um pet para adoção?</h2>
+    </div>
     <p class="lead-sm">
       Envie um e-mail para nossa equipe com as informações abaixo. Analisamos o pedido
       e, se estiver tudo certo, cadastramos o pet no site.
     </p>
 
     <div class="info-checklist">
-      <h3>O que enviar sobre o pet</h3>
+      <h3>📋 O que enviar sobre o pet</h3>
       <ul>
         <li>Nome, espécie (gato ou cão) e raça</li>
         <li>Idade e temperamento</li>
@@ -15,7 +18,7 @@
         <li>Se é vacinado e castrado</li>
         <li>Fotos do pet (anexadas ao e-mail)</li>
       </ul>
-      <h3>Seus dados de contato</h3>
+      <h3>📞 Seus dados de contato</h3>
       <ul>
         <li>Seu nome</li>
         <li>Telefone ou WhatsApp</li>
@@ -28,7 +31,7 @@
        target="_blank"
        rel="noopener noreferrer">Enviar pedido por e-mail</a>
     <p class="detail-cta-hint">
-      O texto do e-mail já vem pronto para você preencher. Destino: {{ contact_email }}
+      O texto do e-mail já vem pronto para você preencher. Destino: <strong>{{ contact_email }}</strong>
     </p>
   </div>
 </section>
