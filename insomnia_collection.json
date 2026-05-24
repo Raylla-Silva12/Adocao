@@ -1,0 +1,234 @@
+{
+  "client": "Insomnia",
+  "clientVersion": "2024.1.0",
+  "reduxVersion": 6,
+  "collections": [
+    {
+      "_id": "collection_adocao_gatos",
+      "parentId": null,
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "name": "Adoção de Gatos API",
+      "description": "API REST para sistema de adoção de pets",
+      "scope": "collection"
+    }
+  ],
+  "requests": [
+    {
+      "_id": "auth_login",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/auth/login",
+      "name": "Login",
+      "description": "Fazer login com credenciais de admin",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\"email\": \"admin@example.com\", \"password\": \"admin123\"}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "auth_me",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/auth/me",
+      "name": "Obter Dados do Admin",
+      "description": "Retorna dados do admin autenticado",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ]
+    },
+    {
+      "_id": "pets_list",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets?status=available&limit=10&offset=0",
+      "name": "Listar Pets",
+      "description": "Lista todos os pets com filtros opcionais",
+      "method": "GET"
+    },
+    {
+      "_id": "pets_get",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets/{{ petId }}",
+      "name": "Obter Pet",
+      "description": "Obtém detalhes de um pet específico",
+      "method": "GET"
+    },
+    {
+      "_id": "pets_create",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets",
+      "name": "Criar Pet",
+      "description": "Cria um novo pet",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "name",
+            "value": "Miau"
+          },
+          {
+            "name": "species",
+            "value": "gato"
+          },
+          {
+            "name": "breed",
+            "value": "Siamês"
+          },
+          {
+            "name": "age_years",
+            "value": "2"
+          },
+          {
+            "name": "description",
+            "value": "Gato dócil e carinhoso"
+          },
+          {
+            "name": "temperament",
+            "value": "dócil"
+          },
+          {
+            "name": "is_vaccinated",
+            "value": "true"
+          },
+          {
+            "name": "is_neutered",
+            "value": "true"
+          }
+        ]
+      },
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ]
+    },
+    {
+      "_id": "pets_update",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets/{{ petId }}",
+      "name": "Atualizar Pet",
+      "description": "Atualiza um pet existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "name",
+            "value": "Novo Nome"
+          },
+          {
+            "name": "status",
+            "value": "adopted"
+          }
+        ]
+      },
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ]
+    },
+    {
+      "_id": "pets_delete",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets/{{ petId }}",
+      "name": "Deletar Pet",
+      "description": "Deleta um pet",
+      "method": "DELETE",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ]
+    },
+    {
+      "_id": "pets_upload_photo",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/api/pets/{{ petId }}/photo",
+      "name": "Upload de Foto",
+      "description": "Faz upload de foto de um pet",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "photo",
+            "type": "file",
+            "value": "/path/to/image.jpg"
+          }
+        ]
+      },
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ]
+    },
+    {
+      "_id": "health_check",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "url": "{{ baseUrl }}/health",
+      "name": "Health Check",
+      "description": "Verifica a saúde da API",
+      "method": "GET"
+    }
+  ],
+  "environments": [
+    {
+      "_id": "env_local",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "name": "Local",
+      "data": {
+        "baseUrl": "http://localhost:8080",
+        "token": "",
+        "petId": ""
+      }
+    },
+    {
+      "_id": "env_production",
+      "parentId": "collection_adocao_gatos",
+      "modified": 1234567890000,
+      "created": 1234567890000,
+      "name": "Production",
+      "data": {
+        "baseUrl": "https://seu-service.run.app",
+        "token": "",
+        "petId": ""
+      }
+    }
+  ]
+}

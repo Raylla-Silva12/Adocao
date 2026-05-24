@@ -1,0 +1,80 @@
+# Ambiente Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Banco de dados
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads
+uploads/
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Logging
+*.log
+logs/
+
+# Docker
+.docker/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE específicas
+.vscode/settings.json
+.vscode/extensions.json
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak

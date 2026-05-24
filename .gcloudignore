@@ -1,0 +1,26 @@
+# Cloud Build ignore file - speeds up build context
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.venv
+venv
+env
+.env
+.pytest_cache
+.coverage
+htmlcov
+*.log
+node_modules
+.DS_Store
+*.swp
+*.swo
+.idea
+.vscode
+*.code-workspace
+Makefile
+.github
+adocao_gatos/
+tests/

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Sem foto">
+  <rect width="400" height="300" fill="#f0ebe3"/>
+  <circle cx="200" cy="130" r="50" fill="#c45c26" opacity="0.25"/>
+  <path d="M155 95 L165 75 L175 95 M225 95 L235 75 L245 95" stroke="#c45c26" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <ellipse cx="200" cy="155" rx="70" ry="55" fill="#c45c26" opacity="0.35"/>
+  <text x="200" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#5f6c7b">Sem foto</text>
+</svg>

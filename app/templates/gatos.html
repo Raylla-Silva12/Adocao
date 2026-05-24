@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Gatos para adoção{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Gatos para adoção</h1>
+    <p>Escolha um amigo peludo. Todos os perfis são atualizados pela equipe.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-bar" role="tablist" aria-label="Filtrar por status">
+      <a href="{{ url_for('web.list_pets', status='available') }}" class="filter-chip {% if current_status == 'available' %}active{% endif %}">Disponíveis</a>
+      <a href="{{ url_for('web.list_pets', status='pending') }}" class="filter-chip {% if current_status == 'pending' %}active{% endif %}">Em processo</a>
+      <a href="{{ url_for('web.list_pets', status='adopted') }}" class="filter-chip {% if current_status == 'adopted' %}active{% endif %}">Adotados</a>
+      <a href="{{ url_for('web.list_pets', status='all') }}" class="filter-chip {% if current_status == 'all' %}active{% endif %}">Todos</a>
+    </div>
+
+    {% if pets %}
+    <div class="pet-grid">
+      {% for pet in pets %}
+      {% include "partials/pet_card.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>Nenhum gato encontrado com este filtro.</p>
+      <a href="{{ url_for('web.list_pets', status='available') }}" class="btn btn-primary">Ver disponíveis</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

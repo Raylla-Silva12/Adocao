@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Painel — Admin{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+  <div class="container">
+    <div class="admin-top">
+      <div>
+        <h1>Painel de gatos</h1>
+        <p id="adminEmail" class="admin-user"></p>
+      </div>
+      <button type="button" id="logoutBtn" class="btn btn-ghost">Sair</button>
+    </div>
+
+    <div class="admin-grid">
+      <aside class="admin-form-panel">
+        <h2 id="formTitle">Novo gato</h2>
+        <form id="petForm" class="admin-form" enctype="multipart/form-data">
+          <input type="hidden" id="petId" name="petId">
+          <input type="hidden" name="species" id="species" value="gato">
+
+          <label for="name">Nome *</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="breed">Raça</label>
+          <input type="text" id="breed" name="breed">
+
+          <label for="age_years">Idade (anos)</label>
+          <input type="number" id="age_years" name="age_years" min="0" max="30">
+
+          <label for="temperament">Temperamento</label>
+          <input type="text" id="temperament" name="temperament" placeholder="dócil, brincalhão...">
+
+          <label for="description">Descrição</label>
+          <textarea id="description" name="description" rows="4"></textarea>
+
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="available">Disponível</option>
+            <option value="pending">Em processo</option>
+            <option value="adopted">Adotado</option>
+          </select>
+
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="is_vaccinated" name="is_vaccinated" value="true"> Vacinado</label>
+            <label><input type="checkbox" id="is_neutered" name="is_neutered" value="true"> Castrado</label>
+          </div>
+
+          <label for="photo">Foto</label>
+          <input type="file" id="photo" name="photo" accept="image/*">
+
+          <p id="formError" class="form-error" hidden></p>
+          <p id="formSuccess" class="form-success" hidden></p>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" id="cancelEdit" class="btn btn-ghost" hidden>Cancelar edição</button>
+          </div>
+        </form>
+      </aside>
+
+      <div class="admin-list-panel">
+        <h2>Gatos cadastrados</h2>
+        <p id="listLoading" class="text-muted">Carregando...</p>
+        <div id="petsTableWrap" class="table-wrap" hidden>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="petsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script>
+  initAdminPanel();
+</script>
+{% endblock %}
