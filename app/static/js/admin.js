@@ -13,6 +13,8 @@ const SPECIES_LABELS = {
   cao: "Cão",
 };
 
+let editingPetHasPhoto = false;
+
 function getToken() {
   return sessionStorage.getItem(TOKEN_KEY);
 }
@@ -85,6 +87,7 @@ function initAdminPanel() {
 
   document.getElementById("petForm").addEventListener("submit", savePet);
   document.getElementById("cancelEdit").addEventListener("click", resetForm);
+  document.getElementById("photo").required = true;
 
   loadPets();
 }
@@ -159,6 +162,11 @@ function startEdit(id, pets) {
   document.getElementById("is_neutered").checked = !!pet.is_neutered;
   document.getElementById("cancelEdit").hidden = false;
   document.getElementById("photo").value = "";
+  editingPetHasPhoto = !!pet.photo_url;
+  document.getElementById("photo").required = !editingPetHasPhoto;
+  document.getElementById("photoHint").textContent = editingPetHasPhoto
+    ? "Deixe em branco para manter a foto atual."
+    : "Obrigatória — selecione uma imagem.";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -168,6 +176,9 @@ function resetForm() {
   document.getElementById("petId").value = "";
   document.getElementById("species").value = "gato";
   document.getElementById("cancelEdit").hidden = true;
+  editingPetHasPhoto = false;
+  document.getElementById("photo").required = true;
+  document.getElementById("photoHint").textContent = "Obrigatória ao cadastrar um novo pet.";
   hideMessages();
 }
 
@@ -200,6 +211,25 @@ async function savePet(event) {
   const errorEl = document.getElementById("formError");
   const successEl = document.getElementById("formSuccess");
   const petId = document.getElementById("petId").value;
+  const ownerContact = document.getElementById("owner_contact").value.trim();
+  const photo = document.getElementById("photo").files[0];
+
+  if (!ownerContact) {
+    errorEl.textContent = "Contato do responsável é obrigatório.";
+    errorEl.hidden = false;
+    return;
+  }
+  if (!photo && !petId) {
+    errorEl.textContent = "Foto do pet é obrigatória.";
+    errorEl.hidden = false;
+    return;
+  }
+  if (petId && !photo && !editingPetHasPhoto) {
+    errorEl.textContent = "Foto do pet é obrigatória.";
+    errorEl.hidden = false;
+    return;
+  }
+
   const fd = buildFormData();
 
   try {

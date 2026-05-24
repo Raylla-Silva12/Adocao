@@ -24,7 +24,9 @@ def validate_pet_data(data):
         except (ValueError, TypeError):
             errors.append("Idade deve ser um número")
 
-    if data.get("owner_contact") is not None:
+    if not str(data.get("owner_contact", "")).strip():
+        errors.append("Contato do responsável é obrigatório")
+    else:
         contact = str(data.get("owner_contact", "")).strip()
         if len(contact) > 50:
             errors.append("Contato do responsável muito longo (máx 50 caracteres)")
@@ -33,6 +35,13 @@ def validate_pet_data(data):
         raise ValidationError(", ".join(errors))
     
     return True
+
+
+def validate_pet_photo(photo_file, existing_photo_url=None):
+    """Exige foto no cadastro ou mantém a existente na edição."""
+    has_upload = photo_file and photo_file.filename
+    if not has_upload and not existing_photo_url:
+        raise ValidationError("Foto do pet é obrigatória")
 
 
 def validate_admin_data(data):

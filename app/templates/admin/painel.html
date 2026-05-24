@@ -39,8 +39,8 @@
           <label for="description">Descrição</label>
           <textarea id="description" name="description" rows="4"></textarea>
 
-          <label for="owner_contact">Contato do responsável</label>
-          <input type="tel" id="owner_contact" name="owner_contact" placeholder="(11) 99999-9999" autocomplete="tel">
+          <label for="owner_contact">Contato do responsável *</label>
+          <input type="tel" id="owner_contact" name="owner_contact" placeholder="(11) 99999-9999" autocomplete="tel" required>
           <p class="field-hint">Visível apenas no painel admin.</p>
 
           <label for="status">Status</label>
@@ -55,8 +55,9 @@
             <label><input type="checkbox" id="is_neutered" name="is_neutered" value="true"> Castrado</label>
           </div>
 
-          <label for="photo">Foto</label>
+          <label for="photo">Foto *</label>
           <input type="file" id="photo" name="photo" accept="image/*">
+          <p id="photoHint" class="field-hint">Obrigatória ao cadastrar um novo pet.</p>
 
           <p id="formError" class="form-error" hidden></p>
           <p id="formSuccess" class="form-success" hidden></p>

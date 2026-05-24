@@ -26,7 +26,7 @@ erDiagram
         boolean is_vaccinated
         boolean is_neutered
         varchar photo_url "URL da foto"
-        varchar owner_contact "contato do responsável — só admin"
+        varchar owner_contact "contato do responsável — obrigatório, só admin"
         varchar status "available | pending | adopted"
         datetime created_at
         datetime updated_at

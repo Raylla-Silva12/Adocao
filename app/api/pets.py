@@ -7,7 +7,7 @@ from app.models import Pet
 from app.extensions import db
 from app.utils.uploads import upload_file, delete_file
 from app.utils.errors import NotFoundError, ValidationError
-from app.utils.validators import validate_pet_data
+from app.utils.validators import validate_pet_data, validate_pet_photo
 
 pets_bp = Blueprint("pets", __name__)
 
@@ -95,7 +95,8 @@ def create_pet():
     - temperament (optional)
     - is_vaccinated (optional, boolean)
     - is_neutered (optional, boolean)
-    - photo (optional, file)
+    - owner_contact (required)
+    - photo (required, file)
     """
     try:
         data = request.form.to_dict()
@@ -107,6 +108,9 @@ def create_pet():
             data["is_neutered"] = data["is_neutered"].lower() == "true"
         
         validate_pet_data(data)
+
+        photo_file = request.files.get("photo")
+        validate_pet_photo(photo_file, existing_photo_url=None)
         
         pet = Pet(
             name=data["name"],
@@ -117,17 +121,13 @@ def create_pet():
             temperament=data.get("temperament"),
             is_vaccinated=data.get("is_vaccinated", False),
             is_neutered=data.get("is_neutered", False),
-            owner_contact=data.get("owner_contact") or None,
+            owner_contact=data["owner_contact"].strip(),
         )
         
-        # Upload de foto
-        if "photo" in request.files:
-            file = request.files["photo"]
-            if file.filename:
-                try:
-                    pet.photo_url = upload_file(file)
-                except ValueError as e:
-                    raise ValidationError(str(e))
+        try:
+            pet.photo_url = upload_file(photo_file)
+        except ValueError as e:
+            raise ValidationError(str(e))
         
         db.session.add(pet)
         db.session.commit()
@@ -181,19 +181,20 @@ def update_pet(pet_id):
         if "is_neutered" in data:
             pet.is_neutered = data["is_neutered"].lower() == "true"
         if "owner_contact" in data:
-            pet.owner_contact = data["owner_contact"].strip() or None
-        
-        # Upload de nova foto
-        if "photo" in request.files:
-            file = request.files["photo"]
-            if file.filename:
-                # Deletar foto anterior
-                if pet.photo_url:
-                    delete_file(pet.photo_url)
-                try:
-                    pet.photo_url = upload_file(file)
-                except ValueError as e:
-                    raise ValidationError(str(e))
+            pet.owner_contact = data["owner_contact"].strip()
+
+        validate_pet_data(data)
+
+        photo_file = request.files.get("photo")
+        if photo_file and photo_file.filename:
+            if pet.photo_url:
+                delete_file(pet.photo_url)
+            try:
+                pet.photo_url = upload_file(photo_file)
+            except ValueError as e:
+                raise ValidationError(str(e))
+
+        validate_pet_photo(photo_file, existing_photo_url=pet.photo_url)
         
         db.session.commit()
         
