@@ -103,6 +103,15 @@ def create_app(config_class=None):
         """Serve fotos enviadas localmente."""
         upload_dir = app.config.get("UPLOAD_FOLDER", "uploads")
         return send_from_directory(upload_dir, filename)
+
+    @app.route("/favicon.ico")
+    def favicon():
+        """Compatibilidade com navegadores que buscam /favicon.ico automaticamente."""
+        return send_from_directory(
+            os.path.join(app.root_path, "static", "img"),
+            "favicon.svg",
+            mimetype="image/svg+xml",
+        )
     
     # Criar tabelas se não existirem
     with app.app_context():
