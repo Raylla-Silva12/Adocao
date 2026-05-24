@@ -6,7 +6,7 @@
   <meta name="description" content="Adote gatos e cães castrados, vacinados e cheios de carinho. Encontre seu novo melhor amigo de forma responsável.">
   <meta name="theme-color" content="#ea580c">
   <meta name="color-scheme" content="light">
-  <title>{% block title %}Adoção de Gatos e Cães{% endblock %}</title>
+  <title>{% block title %}Gatos e Cães - Ubatuba{% endblock %}</title>
 
   <!-- Favicon -->
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
@@ -29,7 +29,7 @@
     <div class="container header-inner">
       <a href="{{ url_for('web.home') }}" class="logo">
         <span class="logo-icon" aria-hidden="true">🐾</span>
-        <span class="logo-text">Gatos e Cães</span>
+        <span class="logo-text">Gatos e Cães - Ubatuba</span>
       </a>
       <nav class="nav-main" aria-label="Principal">
         <a href="{{ url_for('web.home') }}" class="{% if request.endpoint == 'web.home' %}active{% endif %}">Início</a>
